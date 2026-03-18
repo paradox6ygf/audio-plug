@@ -31,7 +31,15 @@ public class AudiomackAudioTrack extends DelegatedAudioTrack {
                 throw new PluginException("Failed to find stream for Audiomack track: " + trackInfo.identifier, FriendlyException.Severity.SUSPICIOUS);
             }
 
-            processDelegate(new com.sedmelluq.discord.lavaplayer.container.adts.AdtsAudioTrack(trackInfo, playbackUrl), executor);
+            HttpGet get = new HttpGet(playbackUrl);
+            get.setHeader("User-Agent", "Mozilla/5.0");
+            try (var response = httpInterface.execute(get)) {
+                int statusCode = response.getStatusLine().getStatusCode();
+                if (statusCode != 200) {
+                    throw new IOException("Non-200 status fetching Audiomack stream: " + statusCode);
+                }
+                processDelegate(new com.sedmelluq.discord.lavaplayer.container.adts.AdtsAudioTrack(trackInfo, response.getEntity().getContent()), executor);
+            }
         } catch (Exception e) {
             throw new PluginException("Error playing Audiomack track", FriendlyException.Severity.FAULT, e);
         }
