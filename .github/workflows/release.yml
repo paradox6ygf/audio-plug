@@ -1,0 +1,33 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Build with Maven
+        run: mvn clean package
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: target/*.jar
+          name: Release ${{ github.ref_name }}
+          body: |
+            ## Production Release ${{ github.ref_name }}
+            
+            This release contains the optimized Lavalink plugin JAR.
+            
+            ### Installation
+            Download the `audio-plug-*.jar` and place it in your Lavalink `plugins` folder.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
