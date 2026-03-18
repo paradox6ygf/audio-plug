@@ -1,0 +1,15 @@
+# KyronixStudio Default Configuration
+# Note: Do not put your private server settings or tokens here.
+# Place this file in your Lavalink src/main/resources/ if building the jar.
+
+plugins:
+  kyronixstudio:
+    sources:
+      gaanaEnabled: true
+      amazonEnabled: true
+      audiomackEnabled: true
+    http:
+      timeout: 15000
+      retries: 3
+    cache:
+      maxSize: 500
