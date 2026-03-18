@@ -157,7 +157,11 @@ public class AudiomackAudioSourceManager implements AudioSourceManager {
 
     @Override
     public void shutdown() {
-        httpInterfaceManager.close();
+        try {
+            httpInterfaceManager.close();
+        } catch (IOException e) {
+            log.error("Failed to close HTTP interface manager", e);
+        }
     }
     
     public HttpInterface getHttpInterface() {
